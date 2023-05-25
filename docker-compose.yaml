@@ -1,0 +1,60 @@
+version: "3"
+
+name: udemy-microservices
+
+services:
+  auth-db:
+    image: postgres:11
+    container_name: auth-db
+    restart: always
+    environment:
+      - POSTGRES_DB=auth_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
+    networks:
+      - udemy-microservices
+
+  product-db:
+    image: postgres:11
+    container_name: product-db
+    restart: always
+    environment:
+      - POSTGRES_DB=product_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5433:5432
+    networks:
+      - udemy-microservices
+
+  sales-db:
+    image: mongo
+    container_name: sales-db
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=sales_db
+    ports:
+      - 27017:27017
+      - 28017:28017
+    networks:
+      - udemy-microservices
+
+  sales-amqp:
+    image: rabbitmq:3-management
+    container_name: sales-amqp
+    restart: always
+    ports:
+      - 5672:5672 
+      - 25676:25676 
+      - 15672:15672
+    networks:
+      - udemy-microservices
+
+networks:
+  udemy-microservices:
+    name: udemy-microservices
+    driver: bridge
